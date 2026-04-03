@@ -1,246 +1,539 @@
 <!DOCTYPE html>
 <html lang="th">
+
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Claude AI Quiz</title>
-<style>
-  *{box-sizing:border-box;margin:0;padding:0;}
-  body{font-family:'Segoe UI',sans-serif;min-height:100vh;background:linear-gradient(135deg,#0f0c29,#302b63,#24243e);display:flex;align-items:center;justify-content:center;padding:20px;}
-  .card{background:#fff;border-radius:20px;padding:40px 36px;max-width:520px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,0.4);text-align:center;}
-  .logo{font-size:56px;margin-bottom:8px;}
-  h1{font-size:28px;font-weight:800;color:#1a1a2e;margin-bottom:6px;}
-  .subtitle{color:#666;font-size:14px;margin-bottom:20px;}
-  .badge-row{display:flex;justify-content:center;gap:8px;margin-bottom:24px;flex-wrap:wrap;}
-  .badge{background:#f0f4ff;color:#3a3aff;border-radius:20px;padding:4px 14px;font-size:12px;font-weight:600;}
-  input[type=text]{width:100%;padding:14px 16px;font-size:16px;border-radius:10px;border:2px solid #dee2e6;outline:none;margin-bottom:16px;text-align:center;}
-  input[type=text]:focus{border-color:#302b63;}
-  .btn{width:100%;padding:14px;font-size:16px;font-weight:700;background:linear-gradient(135deg,#302b63,#24243e);color:#fff;border:none;border-radius:12px;cursor:pointer;transition:opacity .2s;margin-bottom:8px;}
-  .btn:disabled{opacity:.4;cursor:not-allowed;}
-  .btn.gold{background:linear-gradient(135deg,#b8860b,#c9a227);}
-  .btn.gray{background:#6c757d;}
-  .progress-wrap{margin-bottom:20px;}
-  .progress-bar{background:#eee;border-radius:10px;height:8px;margin-bottom:6px;}
-  .progress-fill{background:linear-gradient(90deg,#302b63,#6c63ff);height:100%;border-radius:10px;transition:width .4s;}
-  .progress-text{font-size:13px;color:#888;}
-  .q-box{background:#f8f9fa;border-radius:12px;padding:20px 16px;margin-bottom:20px;text-align:left;}
-  .q-num{font-size:12px;color:#6c63ff;font-weight:700;margin-bottom:8px;text-transform:uppercase;}
-  .q-text{font-size:16px;color:#1a1a2e;font-weight:600;line-height:1.6;}
-  .options{display:flex;flex-direction:column;gap:10px;}
-  .opt-btn{padding:12px 16px;font-size:14px;border-radius:10px;cursor:pointer;border:2px solid #dee2e6;background:#f8f9fa;color:#333;display:flex;align-items:center;gap:12px;text-align:left;font-weight:500;transition:all .15s;}
-  .opt-btn.selected{background:#1a1a2e;color:#fff;border-color:#1a1a2e;transform:scale(1.02);}
-  .opt-letter{min-width:28px;height:28px;border-radius:50%;background:rgba(108,99,255,.15);color:#6c63ff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;flex-shrink:0;}
-  .opt-btn.selected .opt-letter{background:rgba(255,255,255,.2);color:#fff;}
-  .score-big{font-size:52px;font-weight:900;line-height:1;}
-  .percent{font-size:22px;font-weight:700;margin-bottom:16px;}
-  .pass{color:#1a7a4a;}.fail{color:#e74c3c;}
-  .cert-box{border:3px double #c9a227;border-radius:12px;padding:20px;background:linear-gradient(135deg,#fffdf0,#fff8dc);margin-bottom:20px;}
-  .cert-header{font-size:13px;font-weight:800;color:#c9a227;letter-spacing:2px;margin-bottom:8px;}
-  .cert-name{font-size:22px;font-weight:800;color:#1a1a2e;font-style:italic;border-bottom:2px solid #c9a227;display:inline-block;padding:0 12px 4px;margin-bottom:8px;}
-  .cert-body{font-size:13px;color:#555;line-height:1.8;margin-bottom:6px;}
-  .cert-date{font-size:11px;color:#999;margin-bottom:4px;}
-  .cert-org{font-size:12px;color:#c9a227;font-weight:700;}
-  .review-box{background:#f8f9fa;border-radius:10px;padding:14px;margin-bottom:16px;max-height:240px;overflow-y:auto;text-align:left;font-size:12px;}
-  .review-item{margin-top:8px;}
-  .review-ans{font-size:11px;color:#1a7a4a;margin-left:18px;}
-  .screen{display:none;}.screen.active{display:block;}
-  #status-msg{font-size:13px;color:#888;margin-top:10px;min-height:20px;}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Claude AI Quiz</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 20px;
+      padding: 40px 36px;
+      max-width: 520px;
+      width: 100%;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+      text-align: center;
+    }
+
+    .logo {
+      font-size: 56px;
+      margin-bottom: 8px;
+    }
+
+    h1 {
+      font-size: 28px;
+      font-weight: 800;
+      color: #1a1a2e;
+      margin-bottom: 6px;
+    }
+
+    .subtitle {
+      color: #666;
+      font-size: 14px;
+      margin-bottom: 20px;
+    }
+
+    .badge-row {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      background: #f0f4ff;
+      color: #3a3aff;
+      border-radius: 20px;
+      padding: 4px 14px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    input[type=text] {
+      width: 100%;
+      padding: 14px 16px;
+      font-size: 16px;
+      border-radius: 10px;
+      border: 2px solid #dee2e6;
+      outline: none;
+      margin-bottom: 16px;
+      text-align: center;
+    }
+
+    input[type=text]:focus {
+      border-color: #302b63;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 14px;
+      font-size: 16px;
+      font-weight: 700;
+      background: linear-gradient(135deg, #302b63, #24243e);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: opacity .2s;
+      margin-bottom: 8px;
+    }
+
+    .btn:disabled {
+      opacity: .4;
+      cursor: not-allowed;
+    }
+
+    .btn.gold {
+      background: linear-gradient(135deg, #b8860b, #c9a227);
+    }
+
+    .btn.gray {
+      background: #6c757d;
+    }
+
+    .btn.green {
+      background: linear-gradient(135deg, #1a7a4a, #27ae60);
+    }
+
+    .progress-wrap {
+      margin-bottom: 20px;
+    }
+
+    .progress-bar {
+      background: #eee;
+      border-radius: 10px;
+      height: 8px;
+      margin-bottom: 6px;
+    }
+
+    .progress-fill {
+      background: linear-gradient(90deg, #302b63, #6c63ff);
+      height: 100%;
+      border-radius: 10px;
+      transition: width .4s;
+    }
+
+    .progress-text {
+      font-size: 13px;
+      color: #888;
+    }
+
+    .q-box {
+      background: #f8f9fa;
+      border-radius: 12px;
+      padding: 20px 16px;
+      margin-bottom: 20px;
+      text-align: left;
+    }
+
+    .q-num {
+      font-size: 12px;
+      color: #6c63ff;
+      font-weight: 700;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+
+    .q-text {
+      font-size: 16px;
+      color: #1a1a2e;
+      font-weight: 600;
+      line-height: 1.6;
+    }
+
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .opt-btn {
+      padding: 12px 16px;
+      font-size: 14px;
+      border-radius: 10px;
+      cursor: pointer;
+      border: 2px solid #dee2e6;
+      background: #f8f9fa;
+      color: #333;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-align: left;
+      font-weight: 500;
+      transition: all .15s;
+    }
+
+    .opt-btn.selected {
+      background: #1a1a2e;
+      color: #fff;
+      border-color: #1a1a2e;
+      transform: scale(1.02);
+    }
+
+    .opt-letter {
+      min-width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: rgba(108, 99, 255, .15);
+      color: #6c63ff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 13px;
+      flex-shrink: 0;
+    }
+
+    .opt-btn.selected .opt-letter {
+      background: rgba(255, 255, 255, .2);
+      color: #fff;
+    }
+
+    .score-big {
+      font-size: 52px;
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .percent {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+
+    .pass {
+      color: #1a7a4a;
+    }
+
+    .fail {
+      color: #e74c3c;
+    }
+
+    .cert-box {
+      border: 3px double #c9a227;
+      border-radius: 12px;
+      padding: 20px;
+      background: linear-gradient(135deg, #fffdf0, #fff8dc);
+      margin-bottom: 20px;
+    }
+
+    .cert-header {
+      font-size: 13px;
+      font-weight: 800;
+      color: #c9a227;
+      letter-spacing: 2px;
+      margin-bottom: 8px;
+    }
+
+    .cert-name {
+      font-size: 22px;
+      font-weight: 800;
+      color: #1a1a2e;
+      font-style: italic;
+      border-bottom: 2px solid #c9a227;
+      display: inline-block;
+      padding: 0 12px 4px;
+      margin-bottom: 8px;
+    }
+
+    .cert-body {
+      font-size: 13px;
+      color: #555;
+      line-height: 1.8;
+      margin-bottom: 6px;
+    }
+
+    .cert-date {
+      font-size: 11px;
+      color: #999;
+      margin-bottom: 4px;
+    }
+
+    .cert-org {
+      font-size: 12px;
+      color: #c9a227;
+      font-weight: 700;
+    }
+
+    .review-box {
+      background: #f8f9fa;
+      border-radius: 10px;
+      padding: 14px;
+      margin-bottom: 16px;
+      max-height: 240px;
+      overflow-y: auto;
+      text-align: left;
+      font-size: 12px;
+    }
+
+    .review-item {
+      margin-top: 8px;
+    }
+
+    .review-ans {
+      font-size: 11px;
+      color: #1a7a4a;
+      margin-left: 18px;
+    }
+
+    .screen {
+      display: none;
+    }
+
+    .screen.active {
+      display: block;
+    }
+
+    #status-msg {
+      font-size: 13px;
+      color: #888;
+      margin-top: 10px;
+      min-height: 20px;
+    }
+
+    .video-step-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: linear-gradient(135deg, #302b63, #6c63ff);
+      color: #fff;
+      border-radius: 20px;
+      padding: 5px 14px;
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+
+    .video-wrap {
+      position: relative;
+      padding-bottom: 56.25%;
+      height: 0;
+      overflow: hidden;
+      border-radius: 14px;
+      margin-bottom: 16px;
+      box-shadow: 0 8px 30px rgba(48, 43, 99, 0.25);
+    }
+
+    .play-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.35);
+      border-radius: 14px;
+      transition: background .2s;
+    }
+
+    .video-wrap:hover .play-overlay {
+      background: rgba(0, 0, 0, 0.5);
+    }
+
+    .play-btn {
+      width: 64px;
+      height: 64px;
+      background: #ff0000;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      color: #fff;
+      margin-bottom: 8px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    .play-label {
+      color: #fff;
+      font-size: 13px;
+      font-weight: 700;
+      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+    }
+
+    #yt-link {
+      text-decoration: none;
+      display: block;
+    }
+
+    .video-note {
+      background: #f0f4ff;
+      border-left: 4px solid #6c63ff;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 12px;
+      color: #444;
+      text-align: left;
+      margin-bottom: 18px;
+      line-height: 1.6;
+    }
+
+    .video-note strong {
+      color: #302b63;
+    }
+
+    .watched-check {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      justify-content: center;
+      margin-bottom: 14px;
+      font-size: 13px;
+      color: #555;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .watched-check input {
+      width: 16px;
+      height: 16px;
+      accent-color: #302b63;
+      cursor: pointer;
+    }
+  </style>
 </head>
+
 <body>
-<div class="card">
-  <div id="screen-start" class="screen active">
-    <div class="logo">🤖</div>
-    <h1>Claude AI Quiz TEST</h1>
-    <p class="subtitle">ทดสอบความรู้เกี่ยวกับ Claude AI</p>
-    <div class="badge-row">
-      <span class="badge">📝 10 ข้อ</span>
-      <span class="badge">✅ ผ่านเกณฑ์ 80%</span>
-      <span class="badge">🏆 รับใบ Cer</span>
-    </div>
-    <input type="text" id="name-input" placeholder="กรอกชื่อของคุณ..."/>
-    <button class="btn" id="start-btn" onclick="startQuiz()" disabled>เริ่มทำแบบทดสอบ →</button>
-  </div>
+  <div class="card">
 
-  <div id="screen-quiz" class="screen">
-    <div class="progress-wrap">
-      <div class="progress-bar"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
-      <span class="progress-text" id="prog-text">ข้อ 1 / 10</span>
-    </div>
-    <div class="q-box">
-      <div class="q-num" id="q-num">คำถามข้อที่ 1</div>
-      <div class="q-text" id="q-text"></div>
-    </div>
-    <div class="options" id="options"></div>
-    <button class="btn" id="next-btn" onclick="nextQuestion()" disabled style="margin-top:16px">ข้อถัดไป →</button>
-  </div>
-
-  <div id="screen-result" class="screen"></div>
-</div>
-
-<script>
-// ===== ใส่ Apps Script URL ของคุณที่นี่ =====
-const SHEET_URL = "https://script.google.com/macros/s/AKfycbzvbtfCudZtWMkkFcrqcUUgsGj9CnnJAJKpqx7a0_PQW7RulLN_epIVZ09GTMOsScN2/exec";
-
-const questions = [
-  {q:"Claude ถูกพัฒนาโดยบริษัทใด?",opts:["OpenAI","Google DeepMind","Anthropic","Meta AI"],ans:2},
-  {q:"หลักการสำคัญที่ Anthropic ใช้ในการพัฒนา Claude เรียกว่าอะไร?",opts:["RLHF Only","Constitutional AI","Reinforcement Learning","Chain-of-Thought Only"],ans:1},
-  {q:"Claude ถูกออกแบบมาให้มีคุณสมบัติหลัก 3 ประการ ได้แก่อะไร?",opts:["Fast, Cheap, Accurate","Creative, Logical, Emotional","Helpful, Harmless, Honest","Safe, Smart, Simple"],ans:2},
-  {q:"Anthropic ก่อตั้งขึ้นในปีใด?",opts:["2019","2020","2021","2022"],ans:2},
-  {q:"Claude สามารถทำสิ่งใดต่อไปนี้ได้?",opts:["เขียนโค้ด วิเคราะห์ข้อมูล และสClaude AI Quizนทนาทั่วไป","ท่องอินเทอร์เน็ตแบบ Real-time ได้เสมอ","จดจำการสนทนาข้ามเซสชันได้โดยอัตโนมัติ","เชื่อมต่อกับอุปกรณ์ IoT โดยตรง"],ans:0},
-  {q:"ครอบครัวโมเดลล่าสุดของ Claude ในปี 2025 มีรุ่นใดบ้าง?",opts:["Claude 1, Claude 2, Claude 3","Claude Haiku, Claude Sonnet, Claude Opus","Claude Mini, Claude Pro, Claude Ultra","Claude Fast, Claude Smart, Claude Expert"],ans:1},
-  {q:"Constitutional AI ของ Anthropic คืออะไร?",opts:["กฎหมายที่ควบคุม AI ในสหรัฐอเมริกา","วิธีฝึก AI ให้ปฏิบัติตามหลักการด้านจริยธรรมชุดหนึ่ง","รัฐธรรมนูญของบริษัท Anthropic","ระบบประมวลผลแบบใหม่สำหรับ AI"],ans:1},
-  {q:"Claude แตกต่างจาก AI ทั่วไปในด้านความปลอดภัยอย่างไร?",opts:["ไม่มีความแตกต่าง","Claude ถูกฝึกให้ปฏิเสธคำขอที่เป็นอันตรายและให้ความสำคัญกับความปลอดภัยของผู้ใช้","Claude ไม่สามารถพูดถึงหัวข้อที่ละเอียดอ่อนได้เลย","Claude มีระบบ Firewall พิเศษกว่า AI อื่น"],ans:1},
-  {q:"Anthropic มีเป้าหมายหลักในการพัฒนา AI คืออะไร?",opts:["สร้าง AI ที่เร็วที่สุดในโลก","แข่งขันกับ OpenAI เพื่อส่วนแบ่งตลาด","วิจัยและพัฒนา AI ที่ปลอดภัยและเป็นประโยชน์ต่อมนุษยชาติในระยะยาว","สร้างรายได้สูงสุดให้ผู้ถือหุ้น"],ans:2},
-  {q:"Claude สามารถเข้าถึงได้ผ่านช่องทางใดบ้าง?",opts:["เฉพาะแอปมือถือเท่านั้น","Claude.ai และ Anthropic API","เฉพาะผ่าน API เท่านั้น","เฉพาะในสหรัฐอเมริกา"],ans:1},
-];
-
-let cur=0,selected=null,answers=[],userName="";
-const PASS=8,L=["A","B","C","D"];
-
-document.getElementById("name-input").addEventListener("input",function(){
-  document.getElementById("start-btn").disabled=this.value.trim().length<2;
-});
-document.getElementById("name-input").addEventListener("keydown",function(e){
-  if(e.key==="Enter"&&this.value.trim().length>=2)startQuiz();
-});
-
-function show(id){document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));document.getElementById(id).classList.add("active");}
-
-function startQuiz(){
-  userName=document.getElementById("name-input").value.trim();
-  cur=0;selected=null;answers=[];show("screen-quiz");renderQ();
-}
-
-function renderQ(){
-  const q=questions[cur];
-  document.getElementById("prog-fill").style.width=(cur/questions.length*100)+"%";
-  document.getElementById("prog-text").textContent=`ข้อ ${cur+1} / ${questions.length}`;
-  document.getElementById("q-num").textContent=`คำถามข้อที่ ${cur+1}`;
-  document.getElementById("q-text").textContent=q.q;
-  selected=null;
-  document.getElementById("next-btn").disabled=true;
-  document.getElementById("next-btn").textContent=cur+1===questions.length?"ส่งคำตอบ ✓":"ข้อถัดไป →";
-  const opts=document.getElementById("options");opts.innerHTML="";
-  q.opts.forEach((o,i)=>{
-    const b=document.createElement("button");b.className="opt-btn";
-    b.innerHTML=`<span class="opt-letter">${L[i]}</span>${o}`;
-    b.onclick=()=>selectOpt(i);opts.appendChild(b);
-  });
-}
-
-function selectOpt(i){
-  selected=i;
-  document.querySelectorAll(".opt-btn").forEach((b,j)=>b.classList.toggle("selected",j===i));
-  document.getElementById("next-btn").disabled=false;
-}
-
-function nextQuestion(){
-  if(selected===null)return;
-  answers.push(selected);
-  if(cur+1<questions.length){cur++;renderQ();}
-  else showResult();
-}
-
-function showResult(){
-  const score=answers.filter((a,i)=>a===questions[i].ans).length;
-  const pct=score*10,passed=score>=PASS;
-  const now=new Date();
-  const dateStr=now.toLocaleDateString("th-TH",{year:"numeric",month:"long",day:"numeric"});
-  const timeStr=now.toLocaleTimeString("th-TH");
-  const details=questions.map((q,i)=>({
-    ข้อ:i+1,คำถาม:q.q,
-    คำตอบที่เลือก:q.opts[answers[i]],
-    คำตอบที่ถูกต้อง:q.opts[q.ans],
-    ผล:answers[i]===q.ans?"ถูก ✓":"ผิด ✗"
-  }));
-  const payload={
-    summary:{ชื่อ:userName,วันที่:dateStr,เวลา:timeStr,คะแนน:`${score}/10`,เปอร์เซ็นต์:`${pct}%`,ผลการสอบ:passed?"ผ่าน 🏆":"ไม่ผ่าน ❌"},
-    details
-  };
-
-  const el=document.getElementById("screen-result");
-  if(passed){
-    el.innerHTML=`
-      <div style="font-size:64px;margin-bottom:8px">🏆</div>
-      <h2 style="color:#c9a227;font-size:26px;margin:0 0 6px">ยินดีด้วย! ผ่านแล้ว!</h2>
-      <p style="color:#555;margin-bottom:12px">คุณ <strong>${userName}</strong> ได้คะแนน</p>
-      <div class="score-big pass">${score}/10</div>
-      <div class="percent pass">${pct}%</div>
-      <div class="cert-box">
-        <div class="cert-header">🎓 CERTIFICATE OF COMPLETION</div>
-        <div class="cert-name">${userName}</div>
-        <div class="cert-body">ได้ผ่านการทดสอบ <strong>Claude AI &amp; Anthropic</strong><br/>ด้วยคะแนน <strong>${pct}%</strong></div>
-        <div class="cert-date">${dateStr}</div>
-        <div class="cert-org">Powered by AI Champion · Everydayfood</div>
+    <div id="screen-video" class="screen active">
+      <div class="logo">🎬</div>
+      <h1 style="font-size:22px;">ก่อนเริ่ม ดูคลิปนี้ก่อนเลย!</h1>
+      <p class="subtitle" style="margin-bottom:12px;">ศึกษาเนื้อหาให้พร้อมก่อนทำแบบทดสอบ Claude AI</p>
+      <div class="video-step-badge">📺 ขั้นตอนที่ 1 จาก 3</div>
+      <a href="https://www.youtube.com/watch?v=eOglbMi2W2Q" target="_blank" id="yt-link" onclick="onClickVideo()">
+        <div class="video-wrap">
+          <img src="https://img.youtube.com/vi/eOglbMi2W2Q/hqdefault.jpg" alt="Claude AI Video"
+            style="width:100%;height:100%;object-fit:cover;border-radius:14px;display:block;" />
+          <div class="play-overlay">
+            <div class="play-btn">&#9654;</div>
+            <div class="play-label">คลิกเพื่อดูบน YouTube</div>
+          </div>
+        </div>
+      </a>
+      <div class="video-note">
+        <strong>💡 วิธีดู:</strong> คลิกที่รูปด้านบนเพื่อเปิด YouTube ดูให้จบ แล้วกลับมาติ๊กด้านล่างครับ
       </div>
-      <button class="btn gold" onclick="printCert('${userName}','${score}','${pct}','${dateStr}')">🖨️ พิมพ์ใบ Certificate</button>
-      <button class="btn gray" onclick="restart()">ทำใหม่อีกครั้ง 🔄</button>
-      <p id="status-msg">⏳ กำลังบันทึกข้อมูล...</p>`;
-  } else {
-    const rev=details.map(d=>`<div class="review-item">
-      <span style="color:${d.ผล.includes('ถูก')?'#1a7a4a':'#e74c3c'};font-weight:bold">${d.ผล.includes('ถูก')?'✅':'❌'}</span>
-      <span>${d.คำถาม}</span>
-      ${!d.ผล.includes('ถูก')?`<div class="review-ans">→ เฉลย: ${d.คำตอบที่ถูกต้อง}</div>`:''}</div>`).join('');
-    el.innerHTML=`
-      <div style="font-size:64px;margin-bottom:8px">😔</div>
-      <h2 style="color:#e74c3c;font-size:24px;margin:0 0 6px">ยังไม่ผ่านเกณฑ์</h2>
-      <p style="color:#555;margin-bottom:12px">คุณ <strong>${userName}</strong> ได้คะแนน</p>
-      <div class="score-big fail">${score}/10</div>
-      <div class="percent fail">${pct}%</div>
-      <p style="color:#888;font-size:13px;margin-bottom:14px">ต้องได้ 8 ข้อขึ้นไป (80%) จึงจะผ่าน</p>
-      <div class="review-box">${rev}</div>
-      <button class="btn" onclick="restart()">ลองใหม่อีกครั้ง 🔄</button>
-      <p id="status-msg">⏳ กำลังบันทึกข้อมูล...</p>`;
-  }
-  show("screen-result");
-  saveToSheet(payload);
-}
+      <label class="watched-check" id="watch-label">
+        <input type="checkbox" id="watched-cb" onchange="toggleNextBtn()" />
+        ดูคลิปครบแล้ว พร้อมทำแบบทดสอบ ✅
+      </label>
+      <button class="btn green" id="to-name-btn" onclick="show('screen-start')" disabled>ถัดไป: กรอกชื่อ →</button>
+    </div>
 
-function saveToSheet(payload){
-  fetch(SHEET_URL, {
-    method:"POST",
-    mode:"no-cors",
-    headers:{"Content-Type":"application/json"},
-    body:JSON.stringify(payload)
-  })
-  .then(()=>{
-    const m=document.getElementById("status-msg");
-    if(m){m.textContent="✅ บันทึกข้อมูลไปยัง Google Sheets แล้ว!";m.style.color="#1a7a4a";}
-  })
-  .catch(()=>{
-    const m=document.getElementById("status-msg");
-    if(m){m.textContent="❌ บันทึกไม่สำเร็จ";m.style.color="#e74c3c";}
-  });
-}
+    <div id="screen-start" class="screen">
+      <div class="logo">🤖</div>
+      <h1>Claude AI Quiz TEST</h1>
+      <p class="subtitle">ทดสอบความรู้เกี่ยวกับ Claude AI</p>
+      <div class="badge-row">
+        <span class="badge">📝 10 ข้อ</span>
+        <span class="badge">✅ ผ่านเกณฑ์ 80%</span>
+        <span class="badge">🏆 รับใบ Cer</span>
+      </div>
+      <input type="text" id="name-input" placeholder="กรอกชื่อของคุณ..." />
+      <button class="btn" id="start-btn" onclick="startQuiz()" disabled>เริ่มทำแบบทดสอบ →</button>
+      <button class="btn gray" style="font-size:13px;padding:10px;" onclick="show('screen-video')">←
+        กลับดูคลิปอีกครั้ง</button>
+    </div>
 
-function printCert(name,score,pct,dateStr){
-  const w=window.open("","_blank");
-  w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Certificate</title>
-  <style>body{font-family:'Georgia',serif;background:#fff;display:flex;justify-content:center;align-items:center;min-height:100vh;margin:0;}
-  .cert{border:12px double #c9a227;padding:50px 70px;text-align:center;max-width:680px;background:linear-gradient(135deg,#fffdf0,#fff8dc);}
-  h1{color:#c9a227;font-size:40px;margin:0 0 8px;letter-spacing:2px;}.sub{color:#888;font-size:14px;margin-bottom:28px;}
-  .recipient{font-size:34px;color:#1a1a2e;font-style:italic;border-bottom:2px solid #c9a227;display:inline-block;padding:0 18px 4px;margin:10px 0 18px;}
-  .body{font-size:15px;color:#444;line-height:1.8;margin-bottom:20px;}.score{font-size:26px;color:#1a7a4a;font-weight:bold;margin:10px 0;}
-  .date{color:#999;font-size:12px;margin-top:18px;}.seal{font-size:60px;margin:8px 0;}.org{font-size:16px;color:#c9a227;font-weight:bold;margin-top:8px;}
-  </style></head><body><div class="cert">
-  <div class="seal">🏆</div><h1>CERTIFICATE</h1><p class="sub">of Completion</p>
-  <p class="body">This is to certify that</p>
-  <div class="recipient">${name}</div>
-  <p class="body">has successfully completed the<br><strong>Claude AI &amp; Anthropic Knowledge Assessment</strong></p>
-  <div class="score">Score: ${score}/10 (${pct}%)</div>
-  <p class="body">Demonstrating proficiency in Claude AI and Anthropic fundamentals.</p>
-  <p class="date">Date: ${dateStr}</p>
-  <div class="org">Powered by AI Champion · Everydayfood</div>
-  </div></body></html>`);
-  w.document.close();w.print();
-}
+    <div id="screen-quiz" class="screen">
+      <div class="progress-wrap">
+        <div class="progress-bar">
+          <div class="progress-fill" id="prog-fill" style="width:0%"></div>
+        </div>
+        <span class="progress-text" id="prog-text">ข้อ 1 / 10</span>
+      </div>
+      <div class="q-box">
+        <div class="q-num" id="q-num">คำถามข้อที่ 1</div>
+        <div class="q-text" id="q-text"></div>
+      </div>
+      <div class="options" id="options"></div>
+      <button class="btn" id="next-btn" onclick="nextQuestion()" disabled style="margin-top:16px">ข้อถัดไป →</button>
+    </div>
 
-function restart(){
-  document.getElementById("name-input").value="";
-  document.getElementById("start-btn").disabled=true;
-  show("screen-start");
-}
-</script>
+    <div id="screen-result" class="screen"></div>
+  </div>
+
+  <script>
+    const SHEET_URL = "https://script.google.com/macros/s/AKfycbzvbtfCudZtWMkkFcrqcUUgsGj9CnnJAJKpqx7a0_PQW7RulLN_epIVZ09GTMOsScN2/exec";
+    const questions = [
+      { q: "Claude ถูกพัฒนาโดยบริษัทใด?", opts: ["OpenAI", "Google DeepMind", "Anthropic", "Meta AI"], ans: 2 },
+      { q: "หลักการสำคัญที่ Anthropic ใช้ในการพัฒนา Claude เรียกว่าอะไร?", opts: ["RLHF Only", "Constitutional AI", "Reinforcement Learning", "Chain-of-Thought Only"], ans: 1 },
+      { q: "Claude ถูกออกแบบมาให้มีคุณสมบัติหลัก 3 ประการ ได้แก่อะไร?", opts: ["Fast, Cheap, Accurate", "Creative, Logical, Emotional", "Helpful, Harmless, Honest", "Safe, Smart, Simple"], ans: 2 },
+      { q: "Anthropic ก่อตั้งขึ้นในปีใด?", opts: ["2019", "2020", "2021", "2022"], ans: 2 },
+      { q: "Claude สามารถทำสิ่งใดต่อไปนี้ได้?", opts: ["เขียนโค้ด วิเคราะห์ข้อมูล และสนทนาทั่วไป", "ท่องอินเทอร์เน็ตแบบ Real-time ได้เสมอ", "จดจำการสนทนาข้ามเซสชันได้โดยอัตโนมัติ", "เชื่อมต่อกับอุปกรณ์ IoT โดยตรง"], ans: 0 },
+      { q: "ครอบครัวโมเดลล่าสุดของ Claude ในปี 2025 มีรุ่นใดบ้าง?", opts: ["Claude 1, Claude 2, Claude 3", "Claude Haiku, Claude Sonnet, Claude Opus", "Claude Mini, Claude Pro, Claude Ultra", "Claude Fast, Claude Smart, Claude Expert"], ans: 1 },
+      { q: "Constitutional AI ของ Anthropic คืออะไร?", opts: ["กฎหมายที่ควบคุม AI ในสหรัฐอเมริกา", "วิธีฝึก AI ให้ปฏิบัติตามหลักการด้านจริยธรรมชุดหนึ่ง", "รัฐธรรมนูญของบริษัท Anthropic", "ระบบประมวลผลแบบใหม่สำหรับ AI"], ans: 1 },
+      { q: "Claude แตกต่างจาก AI ทั่วไปในด้านความปลอดภัยอย่างไร?", opts: ["ไม่มีความแตกต่าง", "Claude ถูกฝึกให้ปฏิเสธคำขอที่เป็นอันตรายและให้ความสำคัญกับความปลอดภัยของผู้ใช้", "Claude ไม่สามารถพูดถึงหัวข้อที่ละเอียดอ่อนได้เลย", "Claude มีระบบ Firewall พิเศษกว่า AI อื่น"], ans: 1 },
+      { q: "Anthropic มีเป้าหมายหลักในการพัฒนา AI คืออะไร?", opts: ["สร้าง AI ที่เร็วที่สุดในโลก", "แข่งขันกับ OpenAI เพื่อส่วนแบ่งตลาด", "วิจัยและพัฒนา AI ที่ปลอดภัยและเป็นประโยชน์ต่อมนุษยชาติในระยะยาว", "สร้างรายได้สูงสุดให้ผู้ถือหุ้น"], ans: 2 },
+      { q: "Claude สามารถเข้าถึงได้ผ่านช่องทางใดบ้าง?", opts: ["เฉพาะแอปมือถือเท่านั้น", "Claude.ai และ Anthropic API", "เฉพาะผ่าน API เท่านั้น", "เฉพาะในสหรัฐอเมริกา"], ans: 1 },
+    ];
+    let cur = 0, selected = null, answers = [], userName = "";
+    const PASS = 8, L = ["A", "B", "C", "D"];
+
+    function onClickVideo() { setTimeout(() => { document.getElementById("watch-label").scrollIntoView({ behavior: "smooth" }); }, 300); }
+    function toggleNextBtn() { document.getElementById("to-name-btn").disabled = !document.getElementById("watched-cb").checked; }
+    document.getElementById("name-input").addEventListener("input", function () { document.getElementById("start-btn").disabled = this.value.trim().length < 2; });
+    document.getElementById("name-input").addEventListener("keydown", function (e) { if (e.key === "Enter" && this.value.trim().length >= 2) startQuiz(); });
+    function show(id) { document.querySelectorAll(".screen").forEach(s => s.classList.remove("active")); document.getElementById(id).classList.add("active"); }
+    function startQuiz() { userName = document.getElementById("name-input").value.trim(); cur = 0; selected = null; answers = []; show("screen-quiz"); renderQ(); }
+    function renderQ() {
+      const q = questions[cur];
+      document.getElementById("prog-fill").style.width = (cur / questions.length * 100) + "%";
+      document.getElementById("prog-text").textContent = "ข้อ " + (cur + 1) + " / " + questions.length;
+      document.getElementById("q-num").textContent = "คำถามข้อที่ " + (cur + 1);
+      document.getElementById("q-text").textContent = q.q;
+      selected = null;
+      document.getElementById("next-btn").disabled = true;
+      document.getElementById("next-btn").textContent = cur + 1 === questions.length ? "ส่งคำตอบ ✓" : "ข้อถัดไป →";
+      const opts = document.getElementById("options"); opts.innerHTML = "";
+      q.opts.forEach((o, i) => { const b = document.createElement("button"); b.className = "opt-btn"; b.innerHTML = '<span class="opt-letter">' + L[i] + '</span>' + o; b.onclick = () => selectOpt(i); opts.appendChild(b); });
+    }
+    function selectOpt(i) { selected = i; document.querySelectorAll(".opt-btn").forEach((b, j) => b.classList.toggle("selected", j === i)); document.getElementById("next-btn").disabled = false; }
+    function nextQuestion() { if (selected === null) return; answers.push(selected); if (cur + 1 < questions.length) { cur++; renderQ(); } else showResult(); }
+    function showResult() {
+      const score = answers.filter((a, i) => a === questions[i].ans).length;
+      const pct = score * 10, passed = score >= PASS;
+      const now = new Date();
+      const dateStr = now.toLocaleDateString("th-TH", { year: "numeric", month: "long", day: "numeric" });
+      const timeStr = now.toLocaleTimeString("th-TH");
+      const details = questions.map((q, i) => ({ ข้อ: i + 1, คำถาม: q.q, คำตอบที่เลือก: q.opts[answers[i]], คำตอบที่ถูกต้อง: q.opts[q.ans], ผล: answers[i] === q.ans ? "ถูก ✓" : "ผิด ✗" }));
+      const payload = { summary: { ชื่อ: userName, วันที่: dateStr, เวลา: timeStr, คะแนน: score + "/10", เปอร์เซ็นต์: pct + "%", ผลการสอบ: passed ? "ผ่าน 🏆" : "ไม่ผ่าน ❌" }, details };
+      const el = document.getElementById("screen-result");
+      if (passed) {
+        el.innerHTML = '<div style="font-size:64px;margin-bottom:8px">🏆</div><h2 style="color:#c9a227;font-size:26px;margin:0 0 6px">ยินดีด้วย! ผ่านแล้ว!</h2><p style="color:#555;margin-bottom:12px">คุณ <strong>' + userName + '</strong> ได้คะแนน</p><div class="score-big pass">' + score + '/10</div><div class="percent pass">' + pct + '%</div><div class="cert-box"><div class="cert-header">🎓 CERTIFICATE OF COMPLETION</div><div class="cert-name">' + userName + '</div><div class="cert-body">ได้ผ่านการทดสอบ <strong>Claude AI &amp; Anthropic</strong><br/>ด้วยคะแนน <strong>' + pct + '%</strong></div><div class="cert-date">' + dateStr + '</div><div class="cert-org">Powered by AI Champion · Everydayfood</div></div><button class="btn gold" onclick="printCert(\'' + userName + '\',\'' + score + '\',\'' + pct + '\',\'' + dateStr + '\')">🖨️ พิมพ์ใบ Certificate</button><button class="btn gray" onclick="restart()">ทำใหม่อีกครั้ง 🔄</button><p id="status-msg">⏳ กำลังบันทึกข้อมูล...</p>';
+      } else {
+        const rev = details.map(d => '<div class="review-item"><span style="color:' + (d.ผล.includes('ถูก') ? '#1a7a4a' : '#e74c3c') + ';font-weight:bold">' + (d.ผล.includes('ถูก') ? '✅' : '❌') + '</span> <span>' + d.คำถาม + '</span>' + (d.ผล.includes('ถูก') ? '' : '<div class="review-ans">→ เฉลย: ' + d.คำตอบที่ถูกต้อง + '</div>') + '</div>').join('');
+        el.innerHTML = '<div style="font-size:64px;margin-bottom:8px">😔</div><h2 style="color:#e74c3c;font-size:24px;margin:0 0 6px">ยังไม่ผ่านเกณฑ์</h2><p style="color:#555;margin-bottom:12px">คุณ <strong>' + userName + '</strong> ได้คะแนน</p><div class="score-big fail">' + score + '/10</div><div class="percent fail">' + pct + '%</div><p style="color:#888;font-size:13px;margin-bottom:14px">ต้องได้ 8 ข้อขึ้นไป (80%) จึงจะผ่าน</p><div class="review-box">' + rev + '</div><button class="btn" onclick="restart()">ลองใหม่อีกครั้ง 🔄</button><p id="status-msg">⏳ กำลังบันทึกข้อมูล...</p>';
+      }
+      show("screen-result");
+      saveToSheet(payload);
+    }
+    function saveToSheet(payload) { fetch(SHEET_URL, { method: "POST", mode: "no-cors", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) }).then(() => { const m = document.getElementById("status-msg"); if (m) { m.textContent = "✅ บันทึกข้อมูลไปยัง Google Sheets แล้ว!"; m.style.color = "#1a7a4a"; } }).catch(() => { const m = document.getElementById("status-msg"); if (m) { m.textContent = "❌ บันทึกไม่สำเร็จ"; m.style.color = "#e74c3c"; } }); }
+    function printCert(name, score, pct, dateStr) { const w = window.open("", "_blank"); w.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Certificate</title><style>body{font-family:Georgia,serif;background:#fff;display:flex;justify-content:center;align-items:center;min-height:100vh;margin:0;}.cert{border:12px double #c9a227;padding:50px 70px;text-align:center;max-width:680px;background:linear-gradient(135deg,#fffdf0,#fff8dc);}h1{color:#c9a227;font-size:40px;margin:0 0 8px;letter-spacing:2px;}.sub{color:#888;font-size:14px;margin-bottom:28px;}.recipient{font-size:34px;color:#1a1a2e;font-style:italic;border-bottom:2px solid #c9a227;display:inline-block;padding:0 18px 4px;margin:10px 0 18px;}.body{font-size:15px;color:#444;line-height:1.8;margin-bottom:20px;}.score{font-size:26px;color:#1a7a4a;font-weight:bold;margin:10px 0;}.date{color:#999;font-size:12px;margin-top:18px;}.seal{font-size:60px;margin:8px 0;}.org{font-size:16px;color:#c9a227;font-weight:bold;margin-top:8px;}</style></head><body><div class="cert"><div class="seal">🏆</div><h1>CERTIFICATE</h1><p class="sub">of Completion</p><p class="body">This is to certify that</p><div class="recipient">' + name + '</div><p class="body">has successfully completed the<br><strong>Claude AI &amp; Anthropic Knowledge Assessment</strong></p><div class="score">Score: ' + score + '/10 (' + pct + '%)</div><p class="body">Demonstrating proficiency in Claude AI and Anthropic fundamentals.</p><p class="date">Date: ' + dateStr + '</p><div class="org">Powered by AI Champion · Everydayfood</div></div></body></html>'); w.document.close(); w.print(); }
+    function restart() { document.getElementById("name-input").value = ""; document.getElementById("start-btn").disabled = true; document.getElementById("watched-cb").checked = false; document.getElementById("to-name-btn").disabled = true; show("screen-video"); }
+  </script>
 </body>
+
 </html>
